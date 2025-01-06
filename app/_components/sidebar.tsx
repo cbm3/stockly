@@ -3,7 +3,7 @@ const Sidebar = () => {
     <div className="w-64 bg-white">
       {/* IMAGEM */}
       <div className="px-8 py-6">
-        <h1 className="font-bold text-2xl">STOCKLY</h1>
+        <h1 className="text-2xl font-bold">STOCKLY</h1>
       </div>
       {/* BOTÕES */}
       <div className="flex flex-col gap-2 p-2">
