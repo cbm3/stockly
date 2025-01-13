@@ -9,5 +9,5 @@ export const createProduct = async(data: CreateProductSchema) => {
   await db.product.create({
     data,
   });
-  revalidatePath("/products")
+  revalidatePath("/products");
 };
