@@ -6,9 +6,8 @@ import { Button } from "@/app/_components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/app/_components/ui/dropdown-menu";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { CircleIcon, ClipboardCopyIcon, EditIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, CircleIcon, ClipboardCopyIcon, EditIcon, MoreHorizontalIcon, TrashIcon } from "lucide-react";
 import DeleteProductDialogContent from "./delete-dialog-content";
-
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -20,7 +19,17 @@ const getStatusLabel = (status: string) => {
 export const productTableColumns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
-    header: "Produto",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Produto
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "price",
@@ -28,7 +37,17 @@ export const productTableColumns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "stock",
-    header: "Estoque",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Estoque
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "status",
