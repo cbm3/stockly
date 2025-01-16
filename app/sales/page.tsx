@@ -17,15 +17,16 @@ const Sales = async () => {
           <span className="text-xs font-semibold text-slate-500">
             Gestão de Vendas
           </span>
-          <h2 className="text-xl font-semibold">Produtos</h2>
+          <h2 className="text-xl font-semibold">Vendas</h2>
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button>
-              Nova venda
-            </Button>
+            <Button>Nova venda</Button>
           </SheetTrigger>
-          <UpsertSheetContent productOptions={productOptions} />
+          <UpsertSheetContent
+            products={products}
+            productOptions={productOptions}
+          />
         </Sheet>
       </div>
       {/*<DataTable columns={productTableColumns} data={JSON.parse(JSON.stringify(products))} />*/}

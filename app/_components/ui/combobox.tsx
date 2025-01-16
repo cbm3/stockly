@@ -1,9 +1,9 @@
-"use client"
- 
-import { Check, ChevronsUpDown } from "lucide-react"
-import * as React from "react"
- 
-import { Button } from "@/app/_components/ui/button"
+"use client";
+
+import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
+
+import { Button } from "@/app/_components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -11,13 +11,13 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/app/_components/ui/command"
+} from "@/app/_components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/app/_components/ui/popover"
-import { cn } from "@/app/_lib/utils"
+} from "@/app/_components/ui/popover";
+import { cn } from "@/app/_lib/utils";
 
 export interface ComboboxOption {
   value: string;
@@ -31,12 +31,7 @@ interface ComboboxProps {
   placeholder?: string;
 }
 
-export const Combobox = ({
-  value,
-  options,
-  placeholder,
-  onChange,
-}: ComboboxProps) => {
+export const Combobox = ({ value, options, onChange }: ComboboxProps) => {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -46,7 +41,7 @@ export const Combobox = ({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
           {value
             ? options.find((option) => option.value === value)?.label
@@ -54,7 +49,7 @@ export const Combobox = ({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Pesquisar produto..." />
           <CommandList>
@@ -65,14 +60,14 @@ export const Combobox = ({
                   key={option.value}
                   value={option.value}
                   onSelect={(currentValue) => {
-                    onChange(currentValue === value ? "" : currentValue)
-                    setOpen(false)
+                    onChange(currentValue === value ? "" : currentValue);
+                    setOpen(false);
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      value === option.value ? "opacity-100" : "opacity-0",
                     )}
                   />
                   {option.label}
@@ -83,5 +78,5 @@ export const Combobox = ({
         </Command>
       </PopoverContent>
     </Popover>
-  )
-}
+  );
+};
