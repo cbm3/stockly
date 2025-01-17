@@ -17,10 +17,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/app/_components/ui/sheet";
+import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/app/_components/ui/table";
+import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
 import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -65,16 +67,38 @@ const UpsertSheetContent = ({
       (product) => product.id === data.productId,
     );
     if (!selectedProduct) return;
-    setSelectedProducts((prev) => [
-      ...prev,
-      {
-        id: selectedProdut.id,
-      },
-    ]);
+    setSelectedProducts((currentProducts) => {
+      const existingProduct = currentProducts.find(product => product.id === selectedProduct.id);
+      if(existingProduct) {
+        return currentProducts.map((product) => {
+          if(product.id === selectedProduct.id) {
+            return {
+              ...product,
+              quantity: product.quantity + data.quantity,
+            };
+          }
+          return product;
+        });
+      }
+        return [
+          ...currentProducts,
+          { ...selectedProduct,
+            price: Number(selectedProduct.price),
+            quantity: data.quantity,
+          },
+        ];
+    });
+    form.reset();
   };
 
+  const productsTotal = useMemo(() => {
+    return selectedProduts.reduce((acc, product) => {
+      return acc + product.price * product.quantity;
+    }, 0);
+  }, [selectedProduts])
+
   return (
-    <SheetContent>
+    <SheetContent className="!max-w-[700px]">
       <SheetHeader>
         <SheetTitle>Nova venda</SheetTitle>
         <SheetDescription>
@@ -123,6 +147,33 @@ const UpsertSheetContent = ({
           </Button>
         </form>
       </Form>
+      <Table>
+        <TableCaption>Lista dos produtos adicionados à venda.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Produto</TableHead>
+            <TableHead>Preço Unitário</TableHead>
+            <TableHead>Quantidade</TableHead>
+            <TableHead>Total</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {selectedProduts.map((product) => (
+            <TableRow key={product.id}>
+              <TableCell>{product.name}</TableCell>
+              <TableCell>{formatCurrency(product.price)}</TableCell>
+              <TableCell>{product.quantity}</TableCell>
+              <TableCell>{formatCurrency(product.price * product.quantity)}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3}>Total</TableCell>
+            <TableCell>{formatCurrency(productsTotal)}</TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
     </SheetContent>
   );
 };
