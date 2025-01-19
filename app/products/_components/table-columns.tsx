@@ -21,6 +21,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
+          className="px-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Produto
@@ -46,6 +47,7 @@ export const productTableColumns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
+          className="px-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Estoque
