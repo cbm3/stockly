@@ -24,7 +24,9 @@ import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
 import { CheckIcon, PlusIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -42,7 +44,7 @@ type FormSchema = z.infer<typeof formSchema>;
 interface UpsertSheetContentProps {
   products: Product[];
   productOptions: ComboboxOption[];
-  onSubmitSuccess: () => void;
+  setSheetIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SelectedProduct {
@@ -55,11 +57,21 @@ interface SelectedProduct {
 const UpsertSheetContent = ({
   products,
   productOptions,
-  onSubmitSuccess,
+  setSheetIsOpen,
 }: UpsertSheetContentProps) => {
   const [selectedProduts, setSelectedProducts] = useState<SelectedProduct[]>(
     [],
   );
+  const {execute: executeCreateSale} = useAction(createSale, {
+    onError: ({ error: {validationErrors, serverError}}) => {
+      const flattenedErrors = flattenValidationErrors(validationErrors);
+      toast.error(serverError ?? flattenedErrors.formErrors[0]);
+    },
+    onSuccess: () => {
+      toast.success("Venda realizada com sucesso.");
+      setSheetIsOpen(false);
+    }
+  });
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -125,19 +137,13 @@ const UpsertSheetContent = ({
   };
 
   const onSubmitSale = async () => {
-    try {
-      await createSale({
-        products: selectedProduts.map(product => ({
-          id: product.id,
-          quantity: product.quantity,
-        }))
-      })
-      toast.success("Venda realizada com sucesso!")
-      onSubmitSuccess();
-    } catch (error) {
-      toast.success("Erro ao realizar a venda.")
-    }
-  }
+    executeCreateSale({
+      products: selectedProduts.map((product) => ({
+        id: product.id,
+        quantity: product.quantity,
+      })),
+    });
+  };
 
   return (
     <SheetContent className="!max-w-[700px]">
