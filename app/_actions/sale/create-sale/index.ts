@@ -6,7 +6,9 @@ import { returnValidationErrors } from "next-safe-action";
 import { revalidatePath } from "next/cache";
 import { createSaleSchema } from "./schema";
 
-export const createSale = actionClient.schema(createSaleSchema).action(async({parsedInput: {products}}) => {
+export const createSale = actionClient
+  .schema(createSaleSchema)
+  .action(async({parsedInput: {products}}) => {
   await db.$transaction(async (trx) => {
     const sale = await trx.sale.create({
       data: {
