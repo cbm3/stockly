@@ -6,6 +6,7 @@ import { formatCurrency } from "@/app/_helpers/currency";
 import { Sale } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
+import SalesTableDropdownMenu from "./table-dropdown-menu";
 
 export const saleTableColumns: ColumnDef<SalesDto>[] = [
     {
@@ -34,6 +35,8 @@ export const saleTableColumns: ColumnDef<SalesDto>[] = [
     },
     {
         header: "Ações",
-        cell: () => <Button><MoreHorizontalIcon size={16} /></Button>
+        cell: ({ row: { original: sale } }) => (
+            <SalesTableDropdownMenu sale={sale} />
+        ),
     },
 ];
