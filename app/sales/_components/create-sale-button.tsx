@@ -6,6 +6,7 @@ import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
 import { Product } from "@prisma/client";
 import { useState } from "react";
 import UpsertSheetContent from "./upsert-sheet-content";
+import { PlusIcon } from "lucide-react";
 
 interface CreateSaleButtonProps {
   products: Product[];
@@ -17,7 +18,9 @@ const CreateSaleButton = (props: CreateSaleButtonProps) => {
   return (
     <Sheet open={sheetIsOpen} onOpenChange={setSheetIsOpen}>
       <SheetTrigger asChild>
-        <Button>Nova venda</Button>
+        <Button className="gap-2">
+          <PlusIcon />
+          Nova venda</Button>
       </SheetTrigger>
       <UpsertSheetContent onSubmitSuccess={() => {setSheetIsOpen(false)}} {...props} />
     </Sheet>
