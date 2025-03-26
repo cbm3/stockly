@@ -54,5 +54,7 @@ export const createSale = actionClient
       })
     }
   });
-  revalidatePath("/product")
+  revalidatePath("/product");
+  revalidatePath("/sales");
+  revalidatePath("/");
 });
