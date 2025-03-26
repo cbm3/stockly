@@ -5,6 +5,7 @@ import { SaleDto } from "@/app/_data-access/sale/get-sales";
 import { formatCurrency } from "@/app/_helpers/currency";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import SaleTableDropDownMenu from "./table-dropdown-menu";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -15,7 +16,7 @@ const getStatusLabel = (status: string) => {
 
 export const saleTableColumns: ColumnDef<SaleDto>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "productNames",
     header: ({ column }) => {
       return (
         <Button
@@ -44,6 +45,6 @@ export const saleTableColumns: ColumnDef<SaleDto>[] = [
   {
     accessorKey: "actions",
     header: "Ação",
-    //cell: (row) => <TableDropDownMenu product={row.row.original} />,
+    cell: ({row: {original: sale}}) => <SaleTableDropDownMenu sale={sale} />,
   },
 ];

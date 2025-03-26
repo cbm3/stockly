@@ -12,14 +12,16 @@ export interface SaleDto {
 
 export const GetSales = async (): Promise<SaleDto[]> => {
   const sales = await db.sale.findMany({
-    include: { saleProducts: true },
+    include: { saleProducts: {
+      include: {product: true}
+    }},
   });
-  return sales.map((sale: { id: any; date: any; saleProducts: any[]; }) => ({
+  return sales.map((sale) => ({
       id: sale.id,
       date: sale.date,
-      productNames: "Bone, Camisas",
+      productNames: sale.saleProducts.map(saleProduct => saleProduct.product.name).join(" . "),
       totalAmount: sale.saleProducts.reduce(
-        (acc, saleProduct) => acc + saleProduct.quantity * Number(saleProduct.price),
+        (acc, saleProduct) => acc + saleProduct.quantity * Number(saleProduct.unitPrice),
         0,
       ),
       totalProducts: sale.saleProducts.reduce(
